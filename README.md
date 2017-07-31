@@ -11,7 +11,7 @@ Example: extract from start to 00:11:44
 Note that you don't have to use the leading zeros for the hours. The general
 call is the following:
 
-    % python mp4_cut.py -e [hh]:mm:ss -i inputfile.mp4  -o outputfile.mp4
+    % python mp4_cut.py -s [hh]:mm:ss -e [hh]:mm:ss -i inputfile.mp4  -o outputfile.mp4
 
 Using your own `inputfile` and `outputfile`.
 
