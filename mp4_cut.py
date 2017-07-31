@@ -1,21 +1,3 @@
-# cut a section out of MP4 file and return it using ffmpeg
-# without re-encoding. 
-# 
-# EX: extract from start to 00:11:44 
-#
-# % python mp4_cut.py -e 11:44  -i L.mp4 -o foo.mp4 
-#
-# EX: extract from 00:15:00 to 00:17:34 
-#
-# % python mp4_cut.py -s 15:00 -e 17:34  -i L.mp4 -o foo.mp4 
-#  
-# You can also take the complement of the selected slice by using the
-# --invert flag
-#
-# % python mp4_cut.py --inverse -s 15:00 -e 17:34  -i L.mp4 -o foo.mp4 
-# 
-# The two complementary parts are joined to make the output file.
-
 from datetime import datetime
 from subprocess import PIPE, call
 import tempfile, os, argparse
@@ -49,7 +31,24 @@ def get_duration(start,end):
 
 if __name__ == '__main__':
    parse = argparse
-   parser = argparse.ArgumentParser()
+   parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+   description='''Cut a section out of MP4 file and return it using ffmpeg
+without re-encoding. 
+
+Example: extract from start to 00:11:44 
+
+   % python mp4_cut.py -e 11:44  -i L.mp4 -o foo.mp4 
+
+Example: extract from 00:15:00 to 00:17:34 
+
+   % python mp4_cut.py -s 15:00 -e 17:34  -i L.mp4 -o foo.mp4 
+ 
+You can also take the complement of the selected slice by using the
+--invert flag
+
+   % python mp4_cut.py --inverse -s 15:00 -e 17:34  -i L.mp4 -o foo.mp4 
+
+The two complementary parts are joined to make the output file.''')
    parser.add_argument("-i","--input-file", 
                            dest="infile",
                            help='input file',
