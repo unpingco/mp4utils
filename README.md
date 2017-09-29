@@ -23,6 +23,6 @@ Example: extract from 00:15:00 to 00:17:34
 You can also take the complement of the selected slice by using the
 `--invert` flag
 
-    % python mp4_cut.py --inverse -s 15:00 -e 17:34  -i inputfile.mp4 -o outputfile.mp4 
+    % python mp4_cut.py --invert -s 15:00 -e 17:34  -i inputfile.mp4 -o outputfile.mp4 
 
 The two complementary parts are joined to make the output file.
