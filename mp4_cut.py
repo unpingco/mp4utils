@@ -10,13 +10,16 @@ def get_file_duration(infilename):
    '''
    cmd=['ffmpeg','-i',infilename]
    p=Popen(cmd,stdout=PIPE,stderr=PIPE)
-   output=p.stderr.read()
+   output=p.stderr.read().decode('utf8')
    match=re.search('Duration: (.*?)\.',output)
-   match.groups()
-   h,m,s= parse_ts(match.groups()[0])
+   assert match
+   h,m,s= parse_ts(match.group(1))
    return datetime(2017,1,1,h,m,s)
 
 def parse_ts(instring):
+   '''
+   parse time notation
+   '''
    x=instring.split(':')
    if len(x)==2:
       x.insert(0,'0')
@@ -35,17 +38,30 @@ def run_cmd_dt(start,end,infname,outfname):
    run_cmd(start_time,end_time,infname,outfname)
 
 def run_cmd(start='00:00:00',end='23:00:00',infname='foo.mp4',outfname='outfoo.mp4'):
+   '''
+   trigger call to `ffmpeg`
+   '''
    duration = get_duration(start,end)
    cmd=['ffmpeg','-ss',format_ts(start),'-t',duration,'-i',
                  infname,'-acodec','copy','-vcodec','copy',
                  outfname]
    call(cmd,stdout=PIPE,stderr=None)
 
-def get_duration(start,end):
+def get_duration(start='00:00:00',end=''):
+   '''
+   end can be negative if prefixed with `n` as in `n00:00:04`
+   which means four seconds from the end of the file.
+   '''
+   if end and not end.startswith('n'): #
+      he,me,se=parse_ts(end)
+      end_time=datetime(2017,1,1,he,me,se)
+   elif end.startswith('n'):
+      he,me,se=parse_ts(end[1:])
+      end_time=get_file_duration(args.infile)-timedelta(hours=he,minutes=me,seconds=se)
+   else:
+      end_time=get_file_duration(args.infile)
    hs,ms,ss=parse_ts(start)
-   he,me,se=parse_ts(end)
    start_time=datetime(2017,1,1,hs,ms,ss)
-   end_time=datetime(2017,1,1,he,me,se)
    duration=str(end_time - start_time)
    if len(duration)==7: duration = '0'+duration
    return duration
@@ -67,7 +83,7 @@ Example: extract from 00:15:00 to 00:17:34
 You can also take the complement of the selected slice by using the
 --invert flag
 
-   % python mp4_cut.py --inverse -s 15:00 -e 17:34  -i L.mp4 -o foo.mp4 
+   % python mp4_cut.py --inverst -s 15:00 -e 17:34  -i L.mp4 -o foo.mp4 
 
 The two complementary parts are joined to make the output file.''')
    parser.add_argument("-i","--input-file", 
