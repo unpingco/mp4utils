@@ -1,6 +1,6 @@
 # mp4utils
 
-Python 2.7 powered ffmpeg utilities. You need to have ffmpeg installed
+Python 2.7/3.5+ powered ffmpeg utilities. You need to have ffmpeg installed
 separately.
 
 Example: extract from start to 00:11:44 
